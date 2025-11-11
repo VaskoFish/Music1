@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vasko’s Music</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #1db954;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+    }
+    a {
+      color: #1db954;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    audio {
+      margin-top: 10px;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎧 Vasko's Music</h1>
+  <p>All songs in this GitHub repository:</p>
+  <ul id="musicList"></ul>
+
+  <script>
+    const repoOwner = "VaskoFish";
+    const repoName = "Music1";
+    const apiURL = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+
+    async function loadMusic() {
+      const response = await fetch(apiURL);
+      const files = await response.json();
+
+      const list = document.getElementById("musicList");
+      files
+        .filter(f => f.name.endsWith(".mp3"))
+        .forEach(f => {
+          const li = document.createElement("li");
+
+          const link = document.createElement("a");
+          link.href = f.download_url;
+          link.textContent = f.name.replaceAll("%20", " ");
+
+          const player = document.createElement("audio");
+          player.controls = true;
+          player.src = f.download_url;
+
+          li.appendChild(link);
+          li.appendChild(document.createElement("br"));
+          li.appendChild(player);
+          list.appendChild(li);
+        });
+    }
+
+    loadMusic();
+  </script>
+</body>
+</html>
